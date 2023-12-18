@@ -37,7 +37,7 @@ jobs:
           ref: main
           path: .
 
-      - name: Build "${{ inputs.uboot_ref }}" from "${{ inputs.uboot_gh_repo }}" for "${{ matrix.boards.config }}." variant: "${{ matrix.boards.build }}"
+      - name: Build "${{ inputs.uboot_ref }}" from "${{ inputs.uboot_gh_repo }}" for "${{ matrix.boards.config }}." variant "${{ matrix.boards.build }}"
         run: |
           cd ${{ matrix.boards.build }}
           chmod a+x ./build.sh 
