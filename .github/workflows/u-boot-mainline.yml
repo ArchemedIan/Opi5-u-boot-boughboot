@@ -65,8 +65,7 @@ jobs:
           path: rkbin
 
       - name: Checkout github.com repo
-          shell: bash
-          run: git clone --branch ${{ inputs.uboot_ref }} ${{ inputs.uboot_gh_repo }} u-boot
+        run: git clone --branch ${{ inputs.uboot_ref }} ${{ inputs.uboot_gh_repo }} u-boot
 
       - name: Build u-boot - ${{ matrix.boards.config }}
         run: |
