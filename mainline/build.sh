@@ -28,9 +28,9 @@ sudo ln -sf aarch64-linux-gnu-gcov-12 /usr/bin/aarch64-linux-gnu-gcov
 sudo ln -sf aarch64-linux-gnu-gcov-dump-12 /usr/bin/aarch64-linux-gnu-gcov-dump
 sudo ln -sf aarch64-linux-gnu-gcov-tool-12 /usr/bin/aarch64-linux-gnu-gcov-tool
 
-git clone --branch master github.com/rockchip-linux/rkbin.git rkbin
+git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 
-git clone --branch ${ubootRef} ${ubootRepo} u-boot
+git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 
 mkdir $rootdir/out
 
