@@ -36,7 +36,8 @@ mkdir $rootdir/out
 
 export ROCKCHIP_TPL=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKBOOT/RK3588MINIALL.ini -s LOADER_OPTION FlashData)
 export BL31=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKTRUST/RK3588TRUST.ini -s BL31_OPTION PATH)
-
+echo $ROCKCHIP_TPL
+echo $BL31
 cd u-boot
 make mrproper
 make ${boardconfig}
@@ -46,3 +47,5 @@ set -x
 ls u-boot*>/dev/null && cp u-boot* $rootdir/out
 [ -f idbloader.img ] && cp idbloader.img $rootdir/out
 [ -f idbloader-spi.img ] && cp idbloader-spi.img $rootdir/out
+
+exit 0
