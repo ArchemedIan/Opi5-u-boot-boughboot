@@ -42,7 +42,7 @@ make mrproper
 make ${boardconfig}
 make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
 ls
-
+set -x
 ls u-boot*>/dev/null && cp u-boot* $rootdir/out
 [ -f idbloader.img ] && cp idbloader.img $rootdir/out
 [ -f idbloader-spi.img ] && cp idbloader-spi.img $rootdir/out
