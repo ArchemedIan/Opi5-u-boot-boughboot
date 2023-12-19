@@ -48,6 +48,6 @@ jobs:
         with:
           name: u-boot-${{ matrix.boards.name }}
           path: |
-            u-boot/u-boot*
-            u-boot/idbloader.img
-            u-boot/idbloader-spi.img
+            ${{ matrix.boards.build }}/u-boot/u-boot*
+            ${{ matrix.boards.build }}/u-boot/idbloader.img
+            ${{ matrix.boards.build }}/u-boot/idbloader-spi.img
