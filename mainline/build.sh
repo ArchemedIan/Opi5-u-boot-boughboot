@@ -34,14 +34,15 @@ git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 
 mkdir $rootdir/out
 
-export ROCKCHIP_TPL=$rootdir/rkbin/$(confget -f rkbin/RKBOOT/RK3588MINIALL.ini -s LOADER_OPTION FlashData)
-export BL31=$rootdir/rkbin/$(confget -f rkbin/RKTRUST/RK3588TRUST.ini -s BL31_OPTION PATH)
+export ROCKCHIP_TPL=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKBOOT/RK3588MINIALL.ini -s LOADER_OPTION FlashData)
+export BL31=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKTRUST/RK3588TRUST.ini -s BL31_OPTION PATH)
 
 cd u-boot
 make mrproper
 make ${boardconfig}
 make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
+ls
 
-cp u-boot* $rootdir/out
-cp idbloader.img $rootdir/out
-cp idbloader-spi.img $rootdir/out
+[ -f u-boot* ] && cp u-boot* $rootdir/out
+[ -f idbloader.img ] && cp idbloader.img $rootdir/out
+[ -f idbloader-spi.img ] && cp idbloader-spi.img $rootdir/out
