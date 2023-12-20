@@ -40,7 +40,7 @@ sudo ln -sf aarch64-linux-gnu-gcov-tool-12 /usr/bin/aarch64-linux-gnu-gcov-tool
 git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
-
+echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_PREBOOT=\"pci enum; nvme scan; usb start; setenv boot_targets \\\"${order}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
 tail $rootdir/u-boot/configs/${boardconfig}
 
