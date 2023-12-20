@@ -14,6 +14,10 @@ on:
         - usb mmc0 mmc1 nvme pxe
         - pxe mmc0 mmc1 nvme usb
         - custom_order
+      bootorder_custom:
+        description: custom boot target order
+        required: false
+        type: string
       uboot_repo:
         required: true
         type: choice
@@ -67,7 +71,7 @@ jobs:
         run: |
           cd ${{ matrix.boards.build }}
           chmod a+x ./build.sh 
-          ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_repo }}" "${{ matrix.boards.config }}" "${{ inputs.uboot_ref_custom }}" "${{ inputs.uboot_repo_custom}}"
+          ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_repo }}" "${{ matrix.boards.config }}" "${{ inputs.bootorder}}" "${{ inputs.uboot_ref_custom }}" "${{ inputs.uboot_repo_custom}}" "${{ inputs.bootorder_custom}}"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
