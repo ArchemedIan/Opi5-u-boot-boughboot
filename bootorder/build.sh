@@ -7,13 +7,15 @@ ubootRepo=$2
 boardconfig=$3
 order=$4
 
-if [[ "$ubootRef" == *"-custom"* ]]; then
+if [[ "$ubootRef" == *"custom_"* ]]; then
   ubootRef=$5
 fi
-if [[ "$ubootRepo" == *"-custom"* ]]; then
+if [[ "$ubootRepo" == *"custom_"* ]]; then
   ubootRepo=$6
 fi
-
+if [[ "$order" == *"custom_"* ]]; then
+  order=$7
+fi
 sudo apt-get update
 sudo apt-get install gcc-12 gcc-12-aarch64-linux-gnu python3-pyelftools confget
 
