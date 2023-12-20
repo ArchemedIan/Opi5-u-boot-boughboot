@@ -7,10 +7,10 @@ ubootRepo=$2
 boardconfig=$3
 
 if [[ "$ubootRef" == *"custom_"* ]]; then
-  ubootRef=$5
+  ubootRef=$4
 fi
 if [[ "$ubootRepo" == *"custom_"* ]]; then
-  ubootRepo=$6
+  ubootRepo=$5
 fi
 
 sudo apt-get update
