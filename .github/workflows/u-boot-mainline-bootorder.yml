@@ -1,0 +1,79 @@
+name: Build u-boot mainline with custom bootorder
+run-name: Build u-boot mainline with custom bootorder
+on:
+  workflow_dispatch:
+    inputs:      
+      bootorder:
+        required: true
+        type: choice
+        description: boot target order
+        options: 
+        - mmc0 mmc1 nvme usb pxe
+        - mmc1 mmc0 nvme usb pxe
+        - nvme mmc0 mmc1 usb pxe
+        - usb mmc0 mmc1 nvme pxe
+        - pxe mmc0 mmc1 nvme usb
+        - custom_order
+      uboot_repo:
+        required: true
+        type: choice
+        description: u-boot git repo
+        options: 
+        - https://source.denx.de/u-boot/u-boot
+        - custom_repo
+      uboot_repo_custom:
+        description: custom u-boot git repo
+        required: false
+        type: string
+      uboot_ref:
+        required: true
+        type: choice
+        description: u-boot ref
+        options: 
+        - v2024.01-rc5
+        - v2023.10
+        - master
+        - custom_ref
+      uboot_ref_custom:
+        description: custom u-boot ref
+        required: false
+        type: string
+
+
+jobs:
+  build:
+    name: ${{ matrix.boards.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        boards: 
+          [
+            {
+              "name": "rk3588-orangepi-5-plus",
+              "config": "orangepi-5-plus-rk3588_defconfig",
+              "build": "mainline",
+            }
+          ]
+
+    steps:
+      - name: Checkout Opi5-u-boot-custom
+        uses: actions/checkout@v3
+        with:
+          repository: ArchemedIan/Opi5-u-boot-custom
+          ref: main
+          path: .
+
+      - name: Build "${{ matrix.boards.config }}." variant "${{ matrix.boards.build }}"
+        run: |
+          cd ${{ matrix.boards.build }}
+          chmod a+x ./build.sh 
+          ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_repo }}" "${{ matrix.boards.config }}" "${{ inputs.uboot_ref_custom }}" "${{ inputs.uboot_repo_custom}}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: u-boot-${{ inputs.uboot_ref }}-${{ matrix.boards.build }}-${{ matrix.boards.name }}
+          path: |
+            ${{ matrix.boards.build }}/u-boot/u-boot*
+            ${{ matrix.boards.build }}/u-boot/idbloader.img
+            ${{ matrix.boards.build }}/u-boot/idbloader-spi.img
