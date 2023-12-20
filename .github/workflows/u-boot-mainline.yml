@@ -2,17 +2,32 @@ name: Build u-boot mainline
 run-name: Build u-boot mainline
 on:
   workflow_dispatch:
-    inputs:
-      uboot_gh_repo:
-        description: u-boot git repo
+    inputs:       
+      uboot_repo:
         required: true
-        default: https://source.denx.de/u-boot/u-boot
+        type: choice
+        description: u-boot git repo
+        options: 
+        - https://source.denx.de/u-boot/u-boot
+        - custom_repo
+      uboot_repo_custom:
+        description: custom u-boot git repo
+        required: false
         type: string
       uboot_ref:
-        description: u-boot ref
         required: true
-        default: v2024.01-rc4
+        type: choice
+        description: u-boot ref
+        options: 
+        - v2024.01-rc5
+        - v2023.10
+        - master
+        - custom_ref
+      uboot_ref_custom:
+        description: custom u-boot ref
+        required: false
         type: string
+
 
 jobs:
   build:
@@ -37,11 +52,11 @@ jobs:
           ref: main
           path: .
 
-      - name: Build "${{ inputs.uboot_ref }}" from "${{ inputs.uboot_gh_repo }}" for "${{ matrix.boards.config }}." variant "${{ matrix.boards.build }}"
+      - name: Build "${{ matrix.boards.config }}." variant "${{ matrix.boards.build }}"
         run: |
           cd ${{ matrix.boards.build }}
           chmod a+x ./build.sh 
-          ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_gh_repo }}" "${{ matrix.boards.config }}"
+          ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_repo }}" "${{ matrix.boards.config }}" "${{ inputs.uboot_ref_custom }}" "${{ inputs.uboot_repo_custom}}"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
