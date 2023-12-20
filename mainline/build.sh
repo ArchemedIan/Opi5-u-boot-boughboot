@@ -6,10 +6,10 @@ ubootRef=$1
 ubootRepo=$2
 boardconfig=$3
 
-if [[ "$ubootRef" == *"-custom"* ]]; then
+if [[ "$ubootRef" == *"custom_"* ]]; then
   ubootRef=$5
 fi
-if [[ "$ubootRepo" == *"-custom"* ]]; then
+if [[ "$ubootRepo" == *"custom_"* ]]; then
   ubootRepo=$6
 fi
 
