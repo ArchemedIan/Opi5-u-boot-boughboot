@@ -37,6 +37,7 @@ on:
         options: 
         - rk3568-2023.10
         - rk35xx-2024.01
+        - u-boot-rockchip-20231110
         - master
         - custom_ref
       uboot_ref_custom:
