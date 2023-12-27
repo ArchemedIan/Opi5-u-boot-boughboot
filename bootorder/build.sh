@@ -42,7 +42,7 @@ git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${order}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_BOOTCOMMAND=\"pci enum; nvme scan; usb start; bootflow scan\"" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_BOOTCOMMAND=\"pci enum; nvme scan; usb start; echo \"trying ${devtype}\"; bootflow scan\"" >> $rootdir/u-boot/configs/${boardconfig}
 
 
 
