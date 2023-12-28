@@ -46,8 +46,8 @@ echo $ROCKCHIP_TPL
 echo $BL31
 cd u-boot
 make mrproper
-make ${boardconfig}
-make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
+make CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc) ${boardconfig}
+make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc) BL31=$BL31 ROCKCHIP_TPL=$ROCKCHIP_TPL
 ls
 set -x
 ls u-boot*>/dev/null && cp u-boot* $rootdir/out
