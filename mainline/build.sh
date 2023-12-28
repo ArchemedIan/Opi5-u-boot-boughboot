@@ -37,7 +37,12 @@ sudo ln -sf aarch64-linux-gnu-gcov-tool-12 /usr/bin/aarch64-linux-gnu-gcov-tool
 git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
-echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
+#echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
+if [ $rootdir/${boardconfig} ] ; then
+  mv $rootdir/u-boot/configs/${boardconfig} $rootdir/u-boot/configs/${boardconfig}.bak
+  cp $rootdir/${boardconfig} $rootdir/u-boot/configs/${boardconfig}
+fi
+
 mkdir $rootdir/out
 
 export ROCKCHIP_TPL=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKBOOT/RK3588MINIALL.ini -s LOADER_OPTION FlashData)
