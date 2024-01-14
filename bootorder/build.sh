@@ -45,6 +45,10 @@ grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/
 echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${order}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan\"" >> $rootdir/u-boot/configs/${boardconfig}
 
+cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
+
+
+
 tail $rootdir/u-boot/configs/${boardconfig}
 
 mkdir $rootdir/out
@@ -56,6 +60,7 @@ echo $BL31
 cd u-boot
 make mrproper
 make ${boardconfig}
+grep "BROM_BOOTSOURCE_SPINOR_RK3588 = 6" arch/arm/include/asm/arch-rockchip/bootrom.h && patch -p1 < v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff 
 make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
 ls
 set -x
