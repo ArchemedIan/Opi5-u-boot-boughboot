@@ -17,7 +17,7 @@ fi
 if [[ "$order" == *"custom_"* ]]; then
   order=$7
 fi
-if [[ "$order" == "" ]]; then
+if [ -z "$7" ]; then
   order=sd usb nvme sata emmc
 fi
 boardName=$8
