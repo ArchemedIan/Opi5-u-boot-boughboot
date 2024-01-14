@@ -9,14 +9,14 @@ on:
         description: boot target order
         options: 
         - custom_order
-        - mmc1 mmc0 nvme scsi usb pxe dhcp
-        - mmc1 mmc0 nvme scsi usb
-        - mmc0 mmc1 nvme scsi usb pxe dhcp
-        - mmc0 mmc1 nvme scsi usb
-        - nvme mmc1 mmc0 scsi usb pxe dhcp
-        - nvme mmc1 mmc0 scsi usb 
-        - nvme mmc0 mmc1 scsi usb pxe dhcp
-        - nvme mmc0 mmc1 scsi usb 
+        - sd emmc nvme scsi usb pxe dhcp
+        - sd emmc nvme scsi usb
+        - emmc sd nvme scsi usb pxe dhcp
+        - emmc sd nvme scsi usb
+        - nvme sd emmc scsi usb pxe dhcp
+        - nvme sd emmc scsi usb 
+        - nvme emmc sd scsi usb pxe dhcp
+        - nvme emmc sd scsi usb 
       bootorder_custom:
         description: custom boot target order
         required: false
