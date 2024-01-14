@@ -1,4 +1,4 @@
-name: Build u-boot mainline with custom bootorder
+name: Build u-boot-boughboot
 run-name: ${{ inputs.bootorder}}
 on:
   workflow_dispatch:
