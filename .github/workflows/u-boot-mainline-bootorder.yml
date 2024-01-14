@@ -8,12 +8,15 @@ on:
         type: choice
         description: boot target order
         options: 
-        - mmc0 mmc1 nvme usb pxe
-        - mmc1 mmc0 nvme usb pxe
-        - nvme mmc0 mmc1 usb pxe
-        - usb mmc0 mmc1 nvme pxe
-        - pxe mmc0 mmc1 nvme usb
         - custom_order
+        - mmc1 mmc0 nvme scsi usb pxe dhcp
+        - mmc1 mmc0 nvme scsi usb
+        - mmc0 mmc1 nvme scsi usb pxe dhcp
+        - mmc0 mmc1 nvme scsi usb
+        - nvme mmc1 mmc0 scsi usb pxe dhcp
+        - nvme mmc1 mmc0 scsi usb 
+        - nvme mmc0 mmc1 scsi usb pxe dhcp
+        - nvme mmc0 mmc1 scsi usb 
       bootorder_custom:
         description: custom boot target order
         required: false
@@ -82,7 +85,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: u-boot-${{ inputs.uboot_ref }}-${{ matrix.boards.name }}-${{ matrix.boards.build }}-${{ inputs.bootorder}}
-          path: |
-            ${{ matrix.boards.build }}/u-boot/u-boot*
-            ${{ matrix.boards.build }}/u-boot/idbloader.img
-            ${{ matrix.boards.build }}/u-boot/idbloader-spi.img
+          path: ${{ matrix.boards.build }}/out/u-boot-*-spi
