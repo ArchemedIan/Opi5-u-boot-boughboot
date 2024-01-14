@@ -18,6 +18,10 @@ if [[ "$order" == *"custom_"* ]]; then
 fi
 boardName=$8
 orderUnder="${order// /_}"
+bootorder="${order//sd/mmc1}"
+bootorder="${order//emmc/mmc0}"
+
+
 
 sudo apt-get update
 sudo apt-get install gcc-12 gcc-12-aarch64-linux-gnu python3-pyelftools confget
@@ -46,7 +50,7 @@ git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 [ -f $rootdir/u-boot/configs/${boardconfig} ] || exit 1
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${order}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${bootorder}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
 echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
 
