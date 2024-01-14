@@ -1,33 +1,17 @@
 #!/bin/bash
 rootdir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-
 ubootRef=$1
 ubootRepo=$2
 boardconfig=$3
-order=$4
 
-sd usb nvme sata emmc
 if [[ "$ubootRef" == *"custom_"* ]]; then
-  ubootRef=$5
+  ubootRef=$4
 fi
 if [[ "$ubootRepo" == *"custom_"* ]]; then
-  ubootRepo=$6
+  ubootRepo=$5
 fi
-if [[ "$order" == *"custom_"* ]]; then
-  order="$7"
-fi
-if [ -z "$7" ]; then
-  order="sd usb nvme sata emmc"
-fi
-boardName=$8
-orderUnder="${order// /_}"
-bootorder="${order//sd/mmc1}"
-bootorder="${order//emmc/mmc0}"
-bootorder="${order//sata/scsi}"
-sleep 30
-echo BOOT ORDER IS $bootorder
-sleep 30
+boardName=$6
 
 sudo apt-get update
 sudo apt-get install gcc-12 gcc-12-aarch64-linux-gnu python3-pyelftools confget
@@ -55,14 +39,14 @@ git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 [ -f $rootdir/u-boot/configs/${boardconfig} ] || exit 1
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${bootorder}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
 echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
+#echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
+#echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${bootorder}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
 
 cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
 
-tail $rootdir/u-boot/configs/${boardconfig}
+#tail $rootdir/u-boot/configs/${boardconfig}
 
 mkdir $rootdir/out
 
