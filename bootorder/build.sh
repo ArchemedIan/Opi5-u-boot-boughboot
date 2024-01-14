@@ -15,19 +15,19 @@ if [[ "$ubootRepo" == *"custom_"* ]]; then
   ubootRepo=$6
 fi
 if [[ "$order" == *"custom_"* ]]; then
-  order=$7
+  order="$7"
 fi
 if [ -z "$7" ]; then
-  order=sd usb nvme sata emmc
+  order="sd usb nvme sata emmc"
 fi
 boardName=$8
 orderUnder="${order// /_}"
 bootorder="${order//sd/mmc1}"
 bootorder="${order//emmc/mmc0}"
 bootorder="${order//sata/scsi}"
-
+sleep 30
 echo BOOT ORDER IS $bootorder
-sleep 5
+sleep 30
 
 sudo apt-get update
 sudo apt-get install gcc-12 gcc-12-aarch64-linux-gnu python3-pyelftools confget
