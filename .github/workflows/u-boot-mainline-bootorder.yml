@@ -34,7 +34,7 @@ on:
         type: choice
         description: u-boot ref
         options: 
-        - v2024.01-rc5
+        - v2024.01
         - v2023.10
         - master
         - custom_ref
