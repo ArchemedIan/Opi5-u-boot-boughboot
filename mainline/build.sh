@@ -37,11 +37,16 @@ sudo ln -sf aarch64-linux-gnu-gcov-tool-12 /usr/bin/aarch64-linux-gnu-gcov-tool
 git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
-#echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
-if [ $rootdir/${boardconfig} ] ; then
-  mv $rootdir/u-boot/configs/${boardconfig} $rootdir/u-boot/configs/${boardconfig}.bak
-  cp $rootdir/${boardconfig} $rootdir/u-boot/configs/${boardconfig}
-fi
+[ -f $rootdir/u-boot/configs/${boardconfig} ] || exit 1
+grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
+
+#echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
+#echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${order}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
+
+cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
+
 
 mkdir $rootdir/out
 
@@ -52,6 +57,7 @@ echo $BL31
 cd u-boot
 make mrproper
 make CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc) ${boardconfig}
+grep "BROM_BOOTSOURCE_SPINOR_RK3588 = 6" arch/arm/include/asm/arch-rockchip/bootrom.h && patch -p1 < v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff
 make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc) BL31=$BL31 ROCKCHIP_TPL=$ROCKCHIP_TPL
 ls
 set -x
