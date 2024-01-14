@@ -26,7 +26,8 @@ bootorder="${order//sd/mmc1}"
 bootorder="${order//emmc/mmc0}"
 bootorder="${order//sata/scsi}"
 
-
+echo BOOT ORDER IS $bootorder
+sleep 5
 
 sudo apt-get update
 sudo apt-get install gcc-12 gcc-12-aarch64-linux-gnu python3-pyelftools confget
