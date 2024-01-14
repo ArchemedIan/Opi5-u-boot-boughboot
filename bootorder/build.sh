@@ -7,6 +7,7 @@ ubootRepo=$2
 boardconfig=$3
 order=$4
 
+sd usb nvme sata emmc
 if [[ "$ubootRef" == *"custom_"* ]]; then
   ubootRef=$5
 fi
@@ -16,10 +17,14 @@ fi
 if [[ "$order" == *"custom_"* ]]; then
   order=$7
 fi
+if [[ "$order" == "" ]]; then
+  order=sd usb nvme sata emmc
+fi
 boardName=$8
 orderUnder="${order// /_}"
 bootorder="${order//sd/mmc1}"
 bootorder="${order//emmc/mmc0}"
+bootorder="${order//sata/scsi}"
 
 
 
