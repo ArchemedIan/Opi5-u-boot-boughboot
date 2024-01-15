@@ -89,6 +89,7 @@ CONFIG_SPL_MMC_HS200_SUPPORT=y
 TEOF
 
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
+
 echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_PREBOOT=\"setenv devstoscan \\\"mmc0 nvme scsi mmc1 usb\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
@@ -109,10 +110,7 @@ make mrproper
 make ${boardconfig}
 grep "BROM_BOOTSOURCE_SPINOR_RK3588 = 6" arch/arm/include/asm/arch-rockchip/bootrom.h && patch -p1 < v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff 
 make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc)
-ls
-#set -x
-#ls u-boot*>/dev/null && cp u-boot* $rootdir/out
-#[ -f idbloader.img ] && cp idbloader.img $rootdir/out
-#[ -f idbloader-spi.img ] && cp idbloader-spi.img $rootdir/out
+
 cp u-boot-rockchip-spi.bin $rootdir/out/u-boot-boughboot-$ubootRef-$boardName-spi.bin
+cp u-boot-rockchip.bin $rootdir/out/u-boot-boughboot-$ubootRef-$boardName.bin
 exit 0
