@@ -39,61 +39,9 @@ git clone --branch master "https://github.com/rockchip-linux/rkbin.git" rkbin
 git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 [ -f $rootdir/u-boot/configs/${boardconfig} ] || exit 1
 
-cat << TEOF >> $rootdir/u-boot/configs/${boardconfig}
-CONFIG_CC_OPTIMIZE_LIBS_FOR_SPEED=y
-CONFIG_LIBAVB=y
-CONFIG_ZLIB_UNCOMPRESS=y
-CONFIG_BZIP2=y
-CONFIG_ENV_IS_NOWHERE=y
-CONFIG_ENV_IS_IN_SPI_FLASH=y
-CONFIG_ENV_SECT_SIZE_AUTO=y
-CONFIG_VERSION_VARIABLE=y
-CONFIG_CMD_CAT=y
-CONFIG_CMD_SETEXPR=y
-CONFIG_CMD_XXD=y
-CONFIG_CMD_CLS=y
-CONFIG_CMD_INI=y
-CONFIG_CMD_SYSBOOT=y
-CONFIG_CMD_UUID=y
-CONFIG_CMD_BTRFS=y
-CONFIG_CMD_EXT4_WRITE=y
-CONFIG_CMD_FS_UUID=y
-CONFIG_CMD_LSBLK=y
-CONFIG_CMD_MBR=y
-CONFIG_CMD_GPT_RENAME=y
-CONFIG_SYS_PROMPT="BB> "
-CONFIG_CMD_CONFIG=y
-CONFIG_CMD_BOOTZ=y
-CONFIG_CMD_ADTIMG=y
-CONFIG_CMD_ABOOTIMG=y
-CONFIG_CMD_GREPENV=y
-CONFIG_CMD_ERASEENV=y
-CONFIG_CMD_ENV_CALLBACK=y
-CONFIG_CMD_ENV_FLAGS=y
-CONFIG_CMD_NVEDIT_EFI=y
-CONFIG_CMD_NVEDIT_INDIRECT=y
-CONFIG_CMD_NVEDIT_INFO=y
-CONFIG_CMD_NVEDIT_LOAD=y
-CONFIG_CMD_NVEDIT_SELECT=y
-CONFIG_CMD_ZIP=y
-CONFIG_CHROMEOS=y
-CONFIG_BOOTDELAY=1
-CONFIG_BOOTSTD_FULL=y
-CONFIG_BOOTMETH_CROS=y
-CONFIG_LOCALVERSION="boughboot"
-CONFIG_CC_OPTIMIZE_FOR_SPEED=y
-CONFIG_ANDROID_BOOT_IMAGE=y
-CONFIG_ENV_SIZE=0x1f000
-CONFIG_MMC_HS200_SUPPORT=y
-CONFIG_SPL_MMC_HS200_SUPPORT=y
-TEOF
-
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 
-echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_PREBOOT=\"setenv devstoscan \\\"mmc0 nvme scsi mmc1 usb\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
-echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
+cat $rootdir/bb.config >> $rootdir/u-boot/configs/${boardconfig}
 
 cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
 
