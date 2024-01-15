@@ -61,5 +61,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: u-boot-${{ inputs.uboot_ref }}-${{ matrix.boards.name }}-${{ matrix.boards.build }}-${{ inputs.bootorder}}
+          name: u-boot-${{ matrix.boards.build }}-${{ inputs.uboot_ref }}-${{ matrix.boards.name }}
           path: ${{ matrix.boards.build }}/out/*
