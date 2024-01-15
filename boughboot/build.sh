@@ -76,7 +76,6 @@ CONFIG_CMD_NVEDIT_INFO=y
 CONFIG_CMD_NVEDIT_LOAD=y
 CONFIG_CMD_NVEDIT_SELECT=y
 CONFIG_CMD_ZIP=y
-CONFIG_BOOTCOMMAND="bootflow scan"
 CONFIG_CHROMEOS=y
 CONFIG_BOOTDELAY=1
 CONFIG_BOOTSTD_FULL=y
@@ -85,12 +84,14 @@ CONFIG_LOCALVERSION="boughboot"
 CONFIG_CC_OPTIMIZE_FOR_SPEED=y
 CONFIG_ANDROID_BOOT_IMAGE=y
 CONFIG_ENV_SIZE=0x1f000
+CONFIG_MMC_HS200_SUPPORT=y
+CONFIG_SPL_MMC_HS200_SUPPORT=y
 TEOF
 
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_BOOTSTD_FULL=y" >> $rootdir/u-boot/configs/${boardconfig}
-#echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
-#echo -e "CONFIG_PREBOOT=\"setenv boot_targets \\\"${bootorder}\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_USE_PREBOOT=y" >> $rootdir/u-boot/configs/${boardconfig}
+echo -e "CONFIG_PREBOOT=\"setenv devstoscan \\\"mmc0 nvme scsi mmc1 usb\\\"\"" >> $rootdir/u-boot/configs/${boardconfig}
 echo -e "CONFIG_BOOTCOMMAND=\"bootflow scan -b\"" >> $rootdir/u-boot/configs/${boardconfig} #pci enum; nvme scan;
 
 cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
