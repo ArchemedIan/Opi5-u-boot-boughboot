@@ -41,11 +41,6 @@ jobs:
               "name": "rk3588-orangepi-5-plus",
               "config": "orangepi-5-plus-rk3588_defconfig",
               "build": "boughboot",
-            },
-            {
-              "name": "rk3588s-orangepi-5",
-              "config": "orangepi-5-rk3588s_defconfig",
-              "build": "boughboot",
             }
           ]
 
@@ -67,4 +62,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: u-boot-${{ inputs.uboot_ref }}-${{ matrix.boards.name }}-${{ matrix.boards.build }}-${{ inputs.bootorder}}
-          path: ${{ matrix.boards.build }}/out/u-boot-*-spi.bin
+          path: ${{ matrix.boards.build }}/out/*
