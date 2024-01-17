@@ -43,10 +43,10 @@ grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/
 
 cat $rootdir/bb.config >> $rootdir/u-boot/configs/${boardconfig}
 paste -s -d '' $rootdir/BBScriptFile.tmp |tr '\t' ' ' | tr -s ' ' | sed 's/"/\\"/g' >> $rootdir/u-boot/configs/${boardconfig}
+cat $rootdir/u-boot/configs/${boardconfig}
+sleep 60
+
 cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
-
-#tail $rootdir/u-boot/configs/${boardconfig}
-
 mkdir $rootdir/out
 
 export ROCKCHIP_TPL=$rootdir/rkbin/$(confget -f $rootdir/rkbin/RKBOOT/RK3588MINIALL.ini -s LOADER_OPTION FlashData)
