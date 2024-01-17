@@ -42,7 +42,7 @@ git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 
 cat $rootdir/bb.config >> $rootdir/u-boot/configs/${boardconfig}
-cat $rootdir/BBScriptFile.tmp | paste -s -d '' test |tr '\t' ' ' | tr -s ' ' | sed 's/"/\\"/g' >> $rootdir/u-boot/configs/${boardconfig}
+paste -s -d '' $rootdir/BBScriptFile.tmp |tr '\t' ' ' | tr -s ' ' | sed 's/"/\\"/g' >> $rootdir/u-boot/configs/${boardconfig}
 cp $rootdir/v2-1-4-rockchip-rk3588-Fix-boot-from-SPI-flash.diff $rootdir/u-boot/
 
 #tail $rootdir/u-boot/configs/${boardconfig}
