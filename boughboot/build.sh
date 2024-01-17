@@ -61,4 +61,5 @@ make KCFLAGS="-fno-peephole2" CROSS_COMPILE=aarch64-linux-gnu- -j$(nproc) || exi
 
 cp u-boot-rockchip-spi.bin $rootdir/out/u-boot-boughboot-$ubootRef-$boardName-spi.bin
 cp u-boot-rockchip.bin $rootdir/out/u-boot-boughboot-$ubootRef-$boardName.bin
+cd $rootdir
 exit 0
