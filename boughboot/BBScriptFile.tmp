@@ -19,7 +19,7 @@ for thisdevtype in '${BBTargs}' ; do
 							env set BBEnvDevNum '"${thisdevnum}"'; 
 							env set BBEnvPartNum '"${thispartnum}"'; 
 							part type '${BBEnvDevType}' '${BBEnvDevNum}':'${BBEnvPartNum}' BBEnvPartType; 
-							load '${thisdevtype}' '${thisdevnum}':'${thispartnum}' '${scriptaddr}' /BBEnv.txt; 
+							load '${BBEnvDevType}' '${BBEnvDevNum}':'${BBEnvPartNum}' '${scriptaddr}' /BBEnv.txt; 
 							setenv BBEnvFileSize '${filesize}'; 
 							if env import -t '${scriptaddr}' '${BBEnvFileSize}'; then 
 								echo '"BoughBoot: successfully read /BoughBootEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}"'; 
@@ -44,7 +44,8 @@ if test '${BBEnvFound}' = 1; then
 		if test '${NBSticky}' = 0; then 
 			echo '"BoughBoot: avoid bootloop, ignore next NextBoot..."'; 
 			setenv NBnow 0; 
-			env export -t '${scriptaddr}' boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath; 
+			env export -t '${scriptaddr}' boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBSticky NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath; 
+			save '${BBEnvDevType}' '${BBEnvDevNum}':'${BBEnvPartNum}' '${scriptaddr}' /BBEnv.txt; 
 		fi; 
 		for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ '${NBBootPrefix}'; do 
 			if test -e '${NBDevType}' '${NBDevNum}':'${NBPartNum}' '${NBBootPrefixTest}'BBextlinux.conf; then 
