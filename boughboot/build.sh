@@ -42,7 +42,7 @@ git clone --branch ${ubootRef} "${ubootRepo}" u-boot
 grep "CONFIG_ROCKCHIP_SPI_IMAGE=y" $rootdir/u-boot/configs/${boardconfig} >/dev/null || echo -e "CONFIG_ROCKCHIP_SPI_IMAGE=y" >> $rootdir/u-boot/configs/${boardconfig}
 
 cat $rootdir/bb.config >> $rootdir/u-boot/configs/${boardconfig}
-paste -s -d '' $rootdir/BBScriptFile.tmp |tr '\t' ' ' | tr -s ' ' | sed 's/"/\\"/g' | sed 's/|/"/g' | sed 's|\${|\x27\${|g' |sed 's|} |}\x27 |g'|sed 's|}$|}\x27|g' >> $rootdir/u-boot/configs/${boardconfig}
+paste -s -d '' $rootdir/BBScriptFile.tmp |tr '\t' ' ' | tr -s ' ' | sed 's/"/\\"/g' | sed 's/|/"/g'  | sed 's|\${|\x27\${|g'|sed 's|}|}\x27|g' >> $rootdir/u-boot/configs/${boardconfig}
 cat $rootdir/u-boot/configs/${boardconfig}
 sleep 60
 
