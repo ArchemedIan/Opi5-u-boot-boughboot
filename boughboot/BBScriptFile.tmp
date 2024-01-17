@@ -6,7 +6,7 @@ env set BBEnvFound "0";
 
 env set ScanForBBEnv "
 for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then 
-	for thisdevnum in ${max_devnums}; doif test ${BBEnvFound} = 0; then 
+	for thisdevnum in ${max_devnums}; do if test ${BBEnvFound} = 0; then 
 		for thispartnum in ${max_partnums}; do if test ${BBEnvFound} = 0; then 
 			if test ${thisdevtype} = nvme; then pci enum; nvme scan; fi; 
 			if test ${thisdevtype} = usb; then usb start; fi; 
