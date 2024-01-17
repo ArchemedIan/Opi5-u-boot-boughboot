@@ -1,3 +1,4 @@
+#CONFIG_PREBOOT=|
 env set BBTargs "sd usb nvme sata emmc"; 
 env set BBDevnums "0 1"; 
 env set BBPartnums "1 2 3 4 5"; 
@@ -56,3 +57,4 @@ echo BoughBoot: no DefaultBoot or failed, lets go back to BoughBoot;
 sysboot ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum} any ${scriptaddr} /extlinux/extlinux.conf; 
 echo BoughBoot: well, an attempt was made. just boot normaly...; 
 "
+|
