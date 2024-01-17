@@ -23,8 +23,10 @@ for thisdevtype in '${BBTargs}' ; do
 							setenv BBEnvFileSize '${filesize}'; 
 							if env import -t '${scriptaddr}' '${BBEnvFileSize}'; then 
 								echo '"BoughBoot: successfully read /BoughBootEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}"'; 
+								echo '"BoughBoot: setting BBEnvFound"';
 								env set BBEnvFound '"1"'; 
-							else 
+								echo '"BoughBoot: BBEnvFound should be set"'; 	
+							else; 
 								echo '"BoughBoot: failed to read /BBEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}"'; 
 								exit 1; 
 							fi; 
@@ -37,18 +39,28 @@ for thisdevtype in '${BBTargs}' ; do
 done; 
 "; 
 env set NextBootFromBBEnv "
+echo '"BoughBoot: testing if BBEnvFound is 1"';
 if test '${BBEnvFound}' = 1; then 
+	echo '"BoughBoot: BBEnvFound is 1"';
 	if test '${NBnow}' = 0; then 
+		echo '"BoughBoot: NBnow is 0"';
 		echo '"BoughBoot: we booted another os last time, lets go back to defaultboot, Ignoring NextBoot..."'; 
-	else 
+	else;
+		echo '"BoughBoot: NBnow is 1"';
 		if test '${NBSticky}' = 0; then 
+			echo '"BoughBoot: NBSticky is 0"';
 			echo '"BoughBoot: avoid bootloop, ignore next NextBoot..."'; 
 			setenv NBnow 0; 
+			echo '"BoughBoot: NBnow set to 0, exporting vars"';
 			env export -t '${scriptaddr}' boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBSticky NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath; 
+			echo '"BoughBoot: vars should be exported to ${scriptaddr}"';
+			echo '"BoughBoot: saving to ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum}/BBEnv.txt"';
 			save '${BBEnvDevType}' '${BBEnvDevNum}':'${BBEnvPartNum}' '${scriptaddr}' /BBEnv.txt; 
+			echo '"BoughBoot: vars should be saved"';
 		fi; 
 		for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ '${NBBootPrefix}'; do 
 			if test -e '${NBDevType}' '${NBDevNum}':'${NBPartNum}' '${NBBootPrefixTest}'BBextlinux.conf; then 
+				echo '"BoughBoot: trying to boot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf"';
 				sysboot '${NBDevType}' '${NBDevNum}':'${NBPartNum}' '${NBBootPrefixTest}'BBextlinux.conf; 
 			fi; 
 		done; 
