@@ -1,0 +1,58 @@
+env set BBTargs "sd usb nvme sata emmc"; 
+env set BBDevnums "0 1"; 
+env set BBPartnums "1 2 3 4 5"; 
+env set BBEnvFound "0"; 
+
+env set ScanForBBEnv "
+for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then 
+	for thisdevnum in ${max_devnums}; doif test ${BBEnvFound} = 0; then	
+		for thispartnum in ${max_partnums}; do if test ${BBEnvFound} = 0; then 
+			if test ${thisdevtype} = nvme; then pci enum; nvme scan; fi; 
+			if test ${thisdevtype} = usb; then usb start; fi; 
+			echo BoughBoot: testing for ${thisdevtype} ${thisdevnum}:${thispartnum} /BBEnv.txt; 
+			if test -e ${thisdevtype} ${thisdevnum}:${thispartnum} /BBEnv.txt; then 
+				echo BoughBoot: found /BBEnv.txt at ${thisdevtype} ${thisdevnum} on partition ${thispartnum}; 
+				env set BBEnvDevType "${thisdevtype}"; 
+				env set BBEnvDevNum "${thisdevnum}"; 
+				env set BBEnvPartNum "${thispartnum}"; 
+				part type ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum} BBEnvPartType; 
+				load ${thisdevtype} ${thisdevnum}:${thispartnum} ${scriptaddr} /BBEnv.txt; 
+				setenv BBEnvFileSize ${filesize}; 
+				if env import -t ${scriptaddr} ${BBEnvFileSize}; then 
+					echo BoughBoot: successfully read /BoughBootEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}; 
+					env set BBEnvFound "1";  
+				else 
+					echo BoughBoot: failed to read /BBEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}; 
+					exit 1; 
+				fi; 
+				
+			fi; 
+		fi; done; 
+	fi; done; 
+fi; done; 
+";
+
+env set NextBootFromBBEnv "
+if test ${BBEnvFound} = 1; then 
+	if test ${NBnow} = 0; then 
+		echo BoughBoot: we booted another os last time, lets go back to defaultboot, Ignoring NextBoot...; 
+	else
+		if test ${NBSticky} = 0; then 
+			echo BoughBoot: avoid bootloop, ignore next NextBoot...; 
+			setenv NBnow 0; 
+			env export -t ${scriptaddr} boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath
+		fi; 
+		for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ ${NBBootPrefix}; do 
+			if test -e ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf; then 
+				sysboot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf; 
+			fi; 
+		done; 
+		fi; 
+	fi; 
+fi; 
+echo BoughBoot: no NextBoot or failed, lets try defaultboot; 
+sysboot ${DBDevType} ${DBDevNum}:${DBPartNum} ${DBExtlinuxConfFullPath}; 
+echo BoughBoot: no DefaultBoot or failed, lets go back to BoughBoot; 
+sysboot ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum} any ${scriptaddr} /extlinux/extlinux.conf; 
+echo BoughBoot: well, an attempt was made. just boot normaly...; 
+"
