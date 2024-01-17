@@ -1,4 +1,4 @@
-#CONFIG_PREBOOT=|
+CONFIG_PREBOOT=|
 env set BBTargs "sd usb nvme sata emmc"; 
 env set BBDevnums "0 1"; 
 env set BBPartnums "1 2 3 4 5"; 
