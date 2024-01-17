@@ -6,7 +6,7 @@ env set BBEnvFound "0";
 
 env set ScanForBBEnv "
 for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then 
-	for thisdevnum in ${max_devnums}; doif test ${BBEnvFound} = 0; then	
+	for thisdevnum in ${max_devnums}; doif test ${BBEnvFound} = 0; then 
 		for thispartnum in ${max_partnums}; do if test ${BBEnvFound} = 0; then 
 			if test ${thisdevtype} = nvme; then pci enum; nvme scan; fi; 
 			if test ${thisdevtype} = usb; then usb start; fi; 
@@ -21,12 +21,11 @@ for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then
 				setenv BBEnvFileSize ${filesize}; 
 				if env import -t ${scriptaddr} ${BBEnvFileSize}; then 
 					echo BoughBoot: successfully read /BoughBootEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}; 
-					env set BBEnvFound "1";  
+					env set BBEnvFound "1"; 
 				else 
 					echo BoughBoot: failed to read /BBEnv.txt into memaddr ${scriptaddr} size is ${BBEnvFileSize}; 
 					exit 1; 
 				fi; 
-				
 			fi; 
 		fi; done; 
 	fi; done; 
@@ -37,11 +36,11 @@ env set NextBootFromBBEnv "
 if test ${BBEnvFound} = 1; then 
 	if test ${NBnow} = 0; then 
 		echo BoughBoot: we booted another os last time, lets go back to defaultboot, Ignoring NextBoot...; 
-	else
+	else 
 		if test ${NBSticky} = 0; then 
 			echo BoughBoot: avoid bootloop, ignore next NextBoot...; 
 			setenv NBnow 0; 
-			env export -t ${scriptaddr} boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath
+			env export -t ${scriptaddr} boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum NBnow NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath; 
 		fi; 
 		for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ ${NBBootPrefix}; do 
 			if test -e ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf; then 
