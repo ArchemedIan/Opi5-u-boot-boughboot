@@ -3,7 +3,6 @@ env set BBTargs "sd usb nvme sata emmc";
 env set BBDevnums "0 1"; 
 env set BBPartnums "1 2 3 4 5"; 
 env set BBEnvFound "0"; 
-
 env set ScanForBBEnv "
 for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then 
 	for thisdevnum in ${max_devnums}; do if test ${BBEnvFound} = 0; then 
@@ -30,8 +29,7 @@ for thisdevtype in ${BBTargs} ; do if test ${BBEnvFound} = 0; then
 		fi; done; 
 	fi; done; 
 fi; done; 
-";
-
+"; 
 env set NextBootFromBBEnv "
 if test ${BBEnvFound} = 1; then 
 	if test ${NBnow} = 0; then 
