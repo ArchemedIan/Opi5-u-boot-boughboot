@@ -9,7 +9,7 @@ for thisdevtype in "${BBTargs}" ; do
 			if test "${BBEnvFound}" = 0; then 
 				for thispartnum in "${BBPartnums}"; do 
 					if test "${BBEnvFound}" = 0; then 
-						for thisprefix in "/ /boot/ /boot/BB"; do 
+						for thisprefix in "/ /BB/ /boot/ /boot/BB/"; do 
 							if test "${BBEnvFound}" = 0; then 
 								if test "${thisdevtype}" = nvme; then pci enum; nvme scan; fi; 
 								if test "${thisdevtype}" = usb; then usb start; fi; 
