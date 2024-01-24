@@ -48,6 +48,10 @@ if test "${SPIUpdate}" = 1; then
 	fi; 
 	load "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" "${loadaddr}" ${BBEnvPrefix}${SPIUpdFileName}; 
 	sf update "${loadaddr}"; 
+	env export -t "${scriptaddr}" boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum BBEnvPrefix NBnow NBSticky NBDevType NBDevNum NBPartNum NBBootPrefix DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath; 
+	echo "BoughBoot: vars should be exported to ${scriptaddr}"; 
+	echo "BoughBoot: saving to ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum}/BBEnv.txt";
+	reset
 fi; 
 echo "BoughBoot: testing if BBEnvFound is 1"; 
 if test "${BBEnvFound}" = 1; then 
