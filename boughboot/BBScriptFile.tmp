@@ -77,13 +77,13 @@ if test "${BBEnvFound}" = 1; then
 				echo "BoughBoot: trying to boot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf"; 
 				sysboot "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; 
 			fi; 
-		done; 
-		fi; 
+		done;  
 	fi; 
 fi; 
 echo "BoughBoot: no NextBoot or failed, lets try defaultboot"; 
-sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" "${DBExtlinuxConfFullPath}"; 
+sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" any "${scriptaddr}" "${DBExtlinuxConfFullPath}"; 
 echo "BoughBoot: no DefaultBoot or failed, lets go back to BoughBoot"; 
-sysboot "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" any "${scriptaddr}" /extlinux/extlinux.conf; 
+sysboot "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" any "${scriptaddr}" ${BBEnvPrefix}extlinux.conf; 
 echo "BoughBoot: well, an attempt was made. just boot normaly..."; 
+bootflow scan -Gb; 
 |
