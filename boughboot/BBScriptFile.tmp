@@ -1,22 +1,21 @@
+CONFIG_USE_PREBOOT=y
 CONFIG_PREBOOT=|
+env set boot_targets "usb_sd_emmc_nvme_sata"; 
 sf probe; 
-sf read ${loadaddr} 0xfff000; 
-env import -t ${loadaddr} 0xfff; 
-env set BBEnvList "${BBExtraEnvList} BBExtraEnvList boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdPrefix SPIUpdFileName NBnow NBSticky NBBootPrefix NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
+sf read ${scriptaddr} 0xfff000; 
+env import -t ${scriptaddr} 0xfff; 
+env set BBEnvList "${BBExtraEnvList} BBExtraEnvList boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdFileFullPath NBnow NBSticky NBBootPrefix NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
 |
-
-DDDDDDDDDDRRRRRRRRRAAAAAAAAAAFFFFFFFFFTTTTTTTTTTTTTTT
-
-
 CONFIG_BOOTCOMMAND=|
 if env exists BBEnable; then 
 	if test "${SPIUpdate}" = 1; then 
 		env set SPIUpdate 0; 
-		load "${SPIUpdDevType}" "${SPIUpdDevNum}":"${SPIUpdPartNum}" "${loadaddr}" ${SPIUpdPrefix}${SPIUpdFileName}; 
+		load "${SPIUpdDevType}" "${SPIUpdDevNum}":"${SPIUpdPartNum}" "${loadaddr}" "${SPIUpdFileFullPath}"; 
 		sf update "${loadaddr}" 0x0 0xfff000; 
-		env export -t "${loadaddr}" boot_targets ${BBEnvList}; 
-		reset
-	fi;
+		env export -t "${scriptaddr}" "${BBEnvList}"; 
+		sf write "${scriptaddr}" 0xfff000 0x1000; 
+		reset; 
+	fi; 
 	if test "${BBEnable}" = 1; then 
 		echo "BoughBoot: found BBEnv in SPI"; 
 		if test "${NBnow}" = 0; then 
@@ -29,25 +28,25 @@ if env exists BBEnable; then
 				echo "BoughBoot: avoid bootloop, ignore next NextBoot..."; 
 				setenv NBnow 0; 
 				echo "BoughBoot: NBnow set to 0, exporting vars"; 
-				env export -t "${loadaddr}" boot_targets ${BBEnvList}; 
-				echo "BoughBoot: saving to ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum}/BBEnv.txt"; 
-
+				env export -t "${scriptaddr}" "${BBEnvList}"; 
+				echo "BoughBoot: saving to spi"; 
+				sf write "${scriptaddr}" 0xfff000 0x1000; 
 			fi; 
 			for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ "${NBBootPrefix}"; do 
 				if test -e "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; then 
 					echo "BoughBoot: trying to boot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf"; 
 					sysboot "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; 
 				fi; 
-			done;  
-		fi;
+			done; 
+		fi; 
 	fi; 
 fi; 
 echo "BoughBoot: no NextBoot or failed, lets try defaultboot"; 
-sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" any "${scriptaddr}" "${DBExtlinuxConfFullPath}"; 
+sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" any "${loadaddr}" "${DBExtlinuxConfFullPath}"; 
 echo "BoughBoot: no DefaultBoot or failed, lets go back to BoughBoot"; 
-sysboot "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" any "${scriptaddr}" ${BBEnvPrefix}extlinux.conf; 
+sysboot "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" any "${loadaddr}" ${BBEnvPrefix}extlinux.conf; 
 echo "BoughBoot: well, an attempt was made. just boot normaly..."; 
-bootflow scan -Gb;
+bootflow scan -Gb; 
 |
 
 
