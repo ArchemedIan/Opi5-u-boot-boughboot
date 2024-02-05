@@ -14,7 +14,7 @@ if env exists BBEnable; then
 		env set SPIUpdate 0; 
 		load "${SPIUpdDevType}" "${SPIUpdDevNum}":"${SPIUpdPartNum}" "${loadaddr}" ${SPIUpdPrefix}${SPIUpdFileName}; 
 		sf update "${loadaddr}" 0x0 0xfff000; 
-		env export -t "${scriptaddr}" boot_targets ${BBEnvList}; 
+		env export -t "${loadaddr}" boot_targets ${BBEnvList}; 
 		reset
 	fi;
 	if test "${BBEnable}" = 1; then 
@@ -29,11 +29,9 @@ if env exists BBEnable; then
 				echo "BoughBoot: avoid bootloop, ignore next NextBoot..."; 
 				setenv NBnow 0; 
 				echo "BoughBoot: NBnow set to 0, exporting vars"; 
-				env export -t "${scriptaddr}" boot_targets BBEnvDevType BBEnvDevNum BBEnvPartNum BBEnvPrefix NBnow NBSticky NBDevType NBDevNum NBPartNum NBBootPrefix ; 
-				echo "BoughBoot: vars should be exported to ${scriptaddr}"; 
+				env export -t "${loadaddr}" boot_targets ${BBEnvList}; 
 				echo "BoughBoot: saving to ${BBEnvDevType} ${BBEnvDevNum}:${BBEnvPartNum}/BBEnv.txt"; 
-				save "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" "${scriptaddr}" /BBEnv.txt; 
-				echo "BoughBoot: vars should be saved"; 
+
 			fi; 
 			for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ "${NBBootPrefix}"; do 
 				if test -e "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; then 
