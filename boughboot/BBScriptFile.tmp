@@ -4,7 +4,7 @@ env set boot_targets "usb_sd_emmc_nvme_sata";
 sf probe; 
 sf read ${scriptaddr} 0xfff000; 
 env import -t ${scriptaddr} 0xfff; 
-env set BBEnvList "${BBExtraEnvList} BBExtraEnvList boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdFileFullPath NBnow NBSticky NBExtlinuxConfFullPath NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
+env set BBEnvList "BBExtraEnvList ${BBExtraEnvList} boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdFileFullPath NBnow NBSticky NBExtlinuxConfFullPath NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
 |
 CONFIG_BOOTCOMMAND=|
 if env exists BBEnable; then 
