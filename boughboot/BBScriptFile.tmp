@@ -4,7 +4,7 @@ env set boot_targets "usb_sd_emmc_nvme_sata";
 sf probe; 
 sf read ${scriptaddr} 0xfff000; 
 env import -t ${scriptaddr} 0xfff; 
-env set BBEnvList "${BBExtraEnvList} BBExtraEnvList boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdFileFullPath NBnow NBSticky NBBootPrefix NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
+env set BBEnvList "${BBExtraEnvList} BBExtraEnvList boot_targets BBEnable SPIUpdate SPIUpdDevType SPIUpdDevNum SPIUpdPartNum SPIUpdFileFullPath NBnow NBSticky NBExtlinuxConfFullPath NBDevType NBDevNum NBPartNum DBDevType DBDevNum DBPartNum DBExtlinuxConfFullPath"; 
 |
 CONFIG_BOOTCOMMAND=|
 if env exists BBEnable; then 
@@ -32,20 +32,18 @@ if env exists BBEnable; then
 				echo "BoughBoot: saving to spi"; 
 				sf write "${scriptaddr}" 0xfff000 0x1000; 
 			fi; 
-			for NBBootPrefixTest in / /boot/ /boot/BB/ /BB/ /BoughBoot/ "${NBBootPrefix}"; do 
-				if test -e "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; then 
-					echo "BoughBoot: trying to boot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBBootPrefixTest}BBextlinux.conf"; 
-					sysboot "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBBootPrefixTest}BBextlinux.conf"; 
-				fi; 
-			done; 
+			
+			if test -e "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBExtlinuxConfFullPathTest}"; then 
+				echo "BoughBoot: trying to boot ${NBDevType} ${NBDevNum}:${NBPartNum} ${NBExtlinuxConfFullPathTest}"; 
+				sysboot "${NBDevType}" "${NBDevNum}":"${NBPartNum}" "${NBExtlinuxConfFullPathTest}"; 
+			fi; 
+		
 		fi; 
 	fi; 
+	echo "BoughBoot: no NextBoot or failed, lets try defaultboot"; 
+	sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" any "${loadaddr}" "${DBExtlinuxConfFullPath}"; 
 fi; 
-echo "BoughBoot: no NextBoot or failed, lets try defaultboot"; 
-sysboot "${DBDevType}" "${DBDevNum}":"${DBPartNum}" any "${loadaddr}" "${DBExtlinuxConfFullPath}"; 
-echo "BoughBoot: no DefaultBoot or failed, lets go back to BoughBoot"; 
-sysboot "${BBEnvDevType}" "${BBEnvDevNum}":"${BBEnvPartNum}" any "${loadaddr}" ${BBEnvPrefix}extlinux.conf; 
-echo "BoughBoot: well, an attempt was made. just boot normaly..."; 
+echo "BoughBoot: no defaultboot or failed, lets try boot order"; 
 bootflow scan -Gb; 
 |
 
