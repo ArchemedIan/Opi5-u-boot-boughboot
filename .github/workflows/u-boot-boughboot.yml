@@ -59,7 +59,7 @@ jobs:
           ./build.sh "${{ inputs.uboot_ref }}" "${{ inputs.uboot_repo }}" "${{ matrix.boards.config }}" "${{ inputs.uboot_ref_custom }}" "${{ inputs.uboot_repo_custom}}" "${{ matrix.boards.name }}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: u-boot-${{ matrix.boards.build }}-${{ inputs.uboot_ref }}-${{ matrix.boards.name }}
           path: ${{ matrix.boards.build }}/out/*
